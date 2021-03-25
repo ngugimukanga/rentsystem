@@ -1,18 +1,15 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+/* @var $factory \Illuminate\Database\Eloquent\Factory */
 
-use App\Apartment;
 use Faker\Generator as Faker;
 
-$factory->define(Apartment::class, function (Faker $faker) {
+$factory->define(App\Apartment::class, function (Faker $faker) {
     return [
-        'name'=> $faker->word,
-        'landlord_id'=> function(){
-        return \App\Landlord::all()->random();
-        },
-        'address'=> $faker->address,
-        'type'=> $faker->randomElement(['mansionate', '2 bedroom',  '3 bedroom', 'flats', 'bedsitters']),
-        'description'=> $faker->sentence,
+        'name' => $faker->name,
+        'landlord_id' => factory(App\Landlord::class),
+        'address' => $faker->address,
+        'type' => $faker->randomElement(['singles', 'bedsitters', 'flats', '1 bedroom', '2 bedroom', 'mansionnate']),
+        'description' => $faker->sentence,
     ];
 });

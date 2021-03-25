@@ -1,21 +1,15 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+/* @var $factory \Illuminate\Database\Eloquent\Factory */
 
-use App\Payment;
 use Faker\Generator as Faker;
 
-$factory->define(Payment::class, function (Faker $faker) {
+$factory->define(App\Payment::class, function (Faker $faker) {
     return [
-        'tenant_id'=> function(){
-            return \App\Tenant::all()->random();
-        },
-        'unit_id'=> function(){
-            return \App\Unit::all()->random();
-        },
-        'month'=> $faker->randomElement(['feb/2020', 'dec/2019','jan/2019', 'aug/2019', 'sep/2021']),
-        'paid_amount'=> $faker->numberBetween(5000, 10000),
-        //'balance'=>
-
+        'unit_id' => factory(\App\Unit::class),
+        'tenant_id' => factory(\App\Tenant::class),
+        'month' => $faker->date(),
+        'paid_amount' => $faker->randomNumber(),
+        'balance' => $faker->randomNumber(),
     ];
 });

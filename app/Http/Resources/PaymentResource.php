@@ -14,6 +14,14 @@ class PaymentResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'Apartment'=> $this->unit_id, //consult whether it can be passed from apartments table
+            'House Number'=> $this->house_number,
+            'Tenant'=>$this->tenant_id,
+            'Month'=> $this->month,
+            'Rent Payable' => $this->unit_id,
+            'Paid Amount' => $this->paid_amount,
+            'Balance'=> $this->balance
+        ];
     }
 }

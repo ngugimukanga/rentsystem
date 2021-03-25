@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
 
-class LanlordCollection extends Resource
+class LeaseCollection extends Resource
 {
     /**
      * Transform the resource collection into an array.

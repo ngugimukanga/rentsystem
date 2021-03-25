@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UnitRequest;
+use App\Http\Resources\UnitResource;
 use App\Unit;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class UnitController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except('index','show');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +22,7 @@ class UnitController extends Controller
      */
     public function index()
     {
-        //
+        return UnitResource::collection(Unit::all());
     }
 
     /**
@@ -23,9 +31,21 @@ class UnitController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UnitRequest $request)
     {
-        //
+        $unit = new Unit;
+
+        $unit->house_number = $request->house_number;
+        $unit->apartment_id = $request->apartment_id;
+        $unit->rent = $request->rent;
+        $unit->status = $request->status;
+
+        $unit->save();
+
+        return response([
+            'data' => new UnitResource($unit)
+        ], Response::HTTP_CREATED);
+
     }
 
     /**
@@ -36,7 +56,7 @@ class UnitController extends Controller
      */
     public function show(Unit $unit)
     {
-        //
+        return new UnitResource($unit);
     }
 
     /**
@@ -48,7 +68,11 @@ class UnitController extends Controller
      */
     public function update(Request $request, Unit $unit)
     {
-        //
+        $unit->update($request->all());
+        return response()->json([
+            'success'=> true,
+            'data'=> 'Unit details updated successfully'
+        ]);
     }
 
     /**
@@ -59,6 +83,7 @@ class UnitController extends Controller
      */
     public function destroy(Unit $unit)
     {
-        //
+        $unit->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

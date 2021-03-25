@@ -3,12 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Apartment;
+use App\Http\Requests\ApartmentRequest;
 use App\Http\Resources\ApartmentResource;
 use App\Landlord;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
 
 class ApartmentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except('index', 'show');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,10 +25,13 @@ class ApartmentController extends Controller
      */
     public function index()
     {
-        $apartments = Apartment::all();
-        return response()->json([
-            'apartments'=> $apartments
-        ]);
+        return ApartmentResource::collection(Apartment::with('landlord:id,name')->get());
+//            ['parentable'=> function(MorphTo $morphTo){
+//            $morphTo->morphWith([
+//                Landlord::class => ['']
+//            ])
+//        }]));
+
     }
 
     /**
@@ -28,9 +40,21 @@ class ApartmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ApartmentRequest $request)
     {
-        //
+        $apartment = new Apartment;
+
+        $apartment->name = $request->name;
+        $apartment->address = $request->address;
+        $apartment->landlord_id = $request->landlord_id;
+        $apartment->type = $request->type;
+        $apartment->description = $request->description;
+
+        $apartment->save();
+
+        return response([
+           'data' => new ApartmentResource($apartment)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -53,7 +77,11 @@ class ApartmentController extends Controller
      */
     public function update(Request $request, Apartment $apartment)
     {
-        //
+      $apartment->update($request->all());
+        return response()->json([
+                'success'=> true,
+                'data'=> 'Apartment details updated successfully'
+            ]);
     }
 
     /**
@@ -64,6 +92,18 @@ class ApartmentController extends Controller
      */
     public function destroy(Apartment $apartment)
     {
-        //
+        $apartment = Apartment::find($apartment->id);
+        $apartment->delete();
+
+        return response(null, Response::HTTP_NO_CONTENT);
     }
+
+
+//    public function fetchLandlord(){
+//        $landlords = DB::table('apartments')
+//            ->join('landlords', 'apartments.landlord_id', '=', 'landlords.id')
+//            ->select('landlords.name as landlord_name', 'apartments.*')
+//            ->get();
+//        return response()->json($landlords);
+//    }
 }

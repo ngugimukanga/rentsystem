@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TenantRequest;
+use App\Http\Resources\TenantResource;
 use App\Tenant;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class TenantController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except('index','show');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +21,7 @@ class TenantController extends Controller
      */
     public function index()
     {
-        //
+        return TenantResource::collection(Tenant::all());
     }
 
     /**
@@ -23,9 +30,24 @@ class TenantController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TenantRequest $request)
     {
-        //
+        $tenant = new Tenant;
+
+        $tenant->name = $request->name;
+        $tenant->email = $request->email;
+        $tenant->password = $request->password;
+        $tenant->phone = $request->phone;
+        $tenant->national_id = $request->national_id;
+        $tenant->occupation = $request->occupation;
+        $tenant->unit_id = $request->unit_id;
+
+        $tenant->save();
+
+        return response([
+            'data' => new TenantResource($tenant)
+        ], Response::HTTP_CREATED);
+
     }
 
     /**
@@ -36,7 +58,7 @@ class TenantController extends Controller
      */
     public function show(Tenant $tenant)
     {
-        //
+        return new TenantResource($tenant);
     }
 
     /**
@@ -48,7 +70,11 @@ class TenantController extends Controller
      */
     public function update(Request $request, Tenant $tenant)
     {
-        //
+        $tenant->update($request->all());
+        return response()->json([
+            'success'=> true,
+            'data'=> 'Tenant details updated successfully'
+        ]);
     }
 
     /**
@@ -59,6 +85,7 @@ class TenantController extends Controller
      */
     public function destroy(Tenant $tenant)
     {
-        //
+        $tenant->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

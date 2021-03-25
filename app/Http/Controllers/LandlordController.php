@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\LanlordResource;
+use App\Http\Requests\LandlordRequest;
+use App\Http\Resources\LandlordResource;
 use App\Landlord;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class LandlordController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except('index','show');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +22,7 @@ class LandlordController extends Controller
      */
     public function index()
     {
-        return LandlordResource::collection(Landlord::all);
+        return LandlordResource::collection(Landlord::all());
 //        return response()->json([
 //            'landlords'=> $landlords
 //        ]);
@@ -27,9 +34,21 @@ class LandlordController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(LandlordRequest $request)
     {
-        //
+
+        $landlord = new Landlord;
+
+        $landlord->name = $request->name;
+        $landlord->email = $request->email;
+        $landlord->password = $request->password;
+        $landlord->phone = $request->phone;
+        $landlord->account_number = $request->account_number;
+
+        $landlord->save();
+        return response([
+            'data'=> new LandlordResource($landlord)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -40,7 +59,7 @@ class LandlordController extends Controller
      */
     public function show(Landlord $landlord)
     {
-        return new LanlordResource($landlord);
+        return new LandlordResource($landlord);
     }
 
     /**
@@ -50,9 +69,35 @@ class LandlordController extends Controller
      * @param  \App\Landlord  $landlord
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Landlord $landlord)
+    public function update(LandlordRequest $request, Landlord $landlord)
     {
-        //
+        $landlord->update($request->all());
+        return response()->json([
+                'success'=> true,
+                'data'=> 'Landlord details updated successfully'
+            ]);
+
+
+//        $landlord = Landlord::find($request->id);
+
+//        if (!$landlord){
+//            return response()->json([
+//                'success'=>false,
+//                'data'=> 'Landlord Not Found'
+//            ]);
+//        }else
+//        $landlordUpdate = $landlord->fill($request->all())->save();
+//
+//        if($landlordUpdate){
+//            return response()->json([
+//                'success'=> true,
+//                'data'=> 'Landlord details updated successfully'
+//            ]);
+//        }else
+//            return response()->json([
+//                'success'=> false,
+//                'data' => 'Landlord details not updated!'
+//            ]);
     }
 
     /**
@@ -63,6 +108,7 @@ class LandlordController extends Controller
      */
     public function destroy(Landlord $landlord)
     {
-        //
+        $landlord->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

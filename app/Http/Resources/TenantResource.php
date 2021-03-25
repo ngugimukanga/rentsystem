@@ -14,6 +14,13 @@ class TenantResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'Name'=> $this->name,
+            'Email'=> $this->email,
+            'Phone Number'=> $this->phone,
+            'House Number'=> $this->unit_id,
+            'ID' => $this->national_id,
+            'Occupation'=> $this->occupation
+        ];
     }
 }

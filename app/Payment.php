@@ -6,8 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
-    public function landlords(){
-        return $this->belongsTo(Landlord::class);
+    protected $fillable = [
+      'tenant_id','unit_id','month','paid_amount'
+    ];
+    public function tenant(){
+        return $this->belongsTo(Tenant::class);
     }
     public function unit(){
         $this->belongsTo(Unit::class);

@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LanlordResource extends JsonResource
+class LandlordResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,6 +17,7 @@ class LanlordResource extends JsonResource
         return [
             'name'=> $this->name,
             'email'=> $this->email,
+            'password'=> $this->password,
             'phone'=> $this->phone,
             'Bank Account'=> $this->account_number,
 //            'href'=> [
