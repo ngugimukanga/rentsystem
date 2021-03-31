@@ -22,7 +22,7 @@ class LandlordController extends Controller
      */
     public function index()
     {
-        return LandlordResource::collection(Landlord::all());
+        return LandlordResource::collection(Landlord::all()->load('apartments'));
 //        return response()->json([
 //            'landlords'=> $landlords
 //        ]);

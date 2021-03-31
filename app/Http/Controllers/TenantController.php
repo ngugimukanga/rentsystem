@@ -34,13 +34,14 @@ class TenantController extends Controller
     {
         $tenant = new Tenant;
 
+
+        $tenant->unit_id = $request->unit_id;
         $tenant->name = $request->name;
         $tenant->email = $request->email;
         $tenant->password = $request->password;
         $tenant->phone = $request->phone;
         $tenant->national_id = $request->national_id;
         $tenant->occupation = $request->occupation;
-        $tenant->unit_id = $request->unit_id;
 
         $tenant->save();
 

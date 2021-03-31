@@ -22,7 +22,7 @@ class UnitController extends Controller
      */
     public function index()
     {
-        return UnitResource::collection(Unit::all());
+        return UnitResource::collection(Unit::all()->load('tenant'));
     }
 
     /**

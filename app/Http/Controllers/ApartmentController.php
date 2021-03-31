@@ -25,7 +25,7 @@ class ApartmentController extends Controller
      */
     public function index()
     {
-        return ApartmentResource::collection(Apartment::with('landlord:id,name')->get());
+        return ApartmentResource::collection(Apartment::all()->load('units'));
 //            ['parentable'=> function(MorphTo $morphTo){
 //            $morphTo->morphWith([
 //                Landlord::class => ['']
@@ -58,13 +58,13 @@ class ApartmentController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Apartment  $apartment
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return ApartmentResource
      */
-    public function show(Apartment $apartment)
+    public function show(ApartmentResource $apartment)
     {
+
+
         return new ApartmentResource($apartment);
     }
 

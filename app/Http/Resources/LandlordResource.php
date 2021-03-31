@@ -20,9 +20,9 @@ class LandlordResource extends JsonResource
             'password'=> $this->password,
             'phone'=> $this->phone,
             'Bank Account'=> $this->account_number,
-//            'href'=> [
-//                'apartments'=>route('apartments.index', $this->id)
-//            ]
+             'link'=> [
+                 'Apartments'=> route('landlord.apartments',$this->id)
+             ]
         ];
     }
 }

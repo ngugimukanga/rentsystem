@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\TenantResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UnitResource extends JsonResource
@@ -15,11 +16,15 @@ class UnitResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id'=> $this->id,
             'House Number'=> $this->house_number,
             'Apartment'=>$this->apartment_id,
             'Rent Payable'=> $this->rent,
             'Status'=> $this->status,
-            'Tenant' => $this->tenant_id
+            'link'=> [
+                'Tenant'=> route('unit.tenant', $this->id)
+            ]
+
         ];
     }
 }

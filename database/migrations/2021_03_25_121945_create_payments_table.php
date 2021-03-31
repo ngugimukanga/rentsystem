@@ -15,8 +15,9 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('apartment_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('unit_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('tenant_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->date('month');
             $table->integer('paid_amount')->default('0');
             $table->integer('balance')->default('0');

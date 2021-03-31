@@ -7,13 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Tenant extends Model
 {
     protected $fillable = [
-        'name', 'email', 'password', 'phone', 'occupation', 'national_id'
+        'name', 'email', 'password', 'phone', 'occupation', 'national_id', 'apartment_id', 'unit_id'
     ];
-    public function units()
+    public function unit()
     {
-        return $this->hasMany(Unit::class);
+        return $this->belongsTo(Unit::class);
     }
-
+    public function apartment()
+    {
+        return $this->belongsTo(Apartment::class);
+    }
     public function payments()
     {
         $this->hasMany(Payment::class);
